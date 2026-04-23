@@ -1,0 +1,1645 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TripSafe – Travel Risk Briefings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy: #1E3A5F;
+      --navy-dark: #162d4a;
+      --accent: #2E86AB;
+      --orange: #E8630A;
+      --orange-dark: #cf570a;
+      --green: #2E7D32;
+      --amber: #E65100;
+      --red: #C62828;
+      --bg: #F0F4F8;
+      --white: #FFFFFF;
+      --text: #1A1A2A;
+      --muted: #64748B;
+      --border: #E2E8F0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      height: 100dvh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    /* ── HEADER ── */
+    header {
+      background: var(--navy);
+      height: 72px;
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      flex-shrink: 0;
+      gap: 12px;
+      z-index: 100;
+    }
+    .header-brand { display: flex; align-items: center; gap: 10px; flex: 1; }
+    .header-logo { font-size: 26px; line-height: 1; }
+    .header-brand h1 { color: #fff; font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+    .header-brand .tagline { color: #7fa8cc; font-size: 12px; margin-top: 1px; font-weight: 400; }
+    .header-actions { display: flex; gap: 10px; align-items: center; }
+
+    .btn-outline-white {
+      background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,0.5);
+      border-radius: 8px; padding: 8px 14px; font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all 0.15s; font-family: inherit; white-space: nowrap;
+    }
+    .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+
+    .btn-orange {
+      background: var(--orange); color: #fff; border: none; border-radius: 8px;
+      padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer;
+      transition: background 0.15s; font-family: inherit; white-space: nowrap;
+    }
+    .btn-orange:hover { background: var(--orange-dark); }
+
+    #btn-mobile-menu {
+      display: none; background: transparent; border: none; color: #fff;
+      cursor: pointer; padding: 6px; border-radius: 6px;
+    }
+
+    /* ── MAIN LAYOUT ── */
+    .main { flex: 1; display: flex; overflow: hidden; }
+
+    /* ── SIDEBAR ── */
+    .sidebar {
+      width: 340px; flex-shrink: 0; background: var(--navy); display: flex;
+      flex-direction: column; overflow-y: auto; padding: 24px 20px; gap: 20px;
+      border-right: 1px solid rgba(255,255,255,0.08);
+    }
+    .sidebar-title { color: rgba(255,255,255,0.5); font-size: 11px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; }
+    .sidebar-field { display: flex; flex-direction: column; gap: 6px; }
+    .sidebar-field label { color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 500; }
+    .sidebar-input {
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 14px;
+      font-family: inherit; outline: none; transition: border-color 0.15s; width: 100%;
+    }
+    .sidebar-input::placeholder { color: rgba(255,255,255,0.35); }
+    .sidebar-input:focus { border-color: var(--accent); }
+    .party-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+    .pill {
+      padding: 6px 14px; border-radius: 20px; border: 1.5px solid rgba(255,255,255,0.25);
+      background: transparent; color: rgba(255,255,255,0.7); font-size: 12px; font-weight: 500;
+      cursor: pointer; transition: all 0.15s; font-family: inherit;
+    }
+    .pill:hover { border-color: rgba(255,255,255,0.6); color: #fff; }
+    .pill.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .concerns-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .concern-item { display: flex; align-items: center; gap: 8px; cursor: pointer; color: rgba(255,255,255,0.7); font-size: 13px; }
+    .concern-item input[type="checkbox"] { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; flex-shrink: 0; }
+    .sidebar-divider { border: none; border-top: 1px solid rgba(255,255,255,0.1); }
+    .btn-start-briefing {
+      background: var(--orange); color: #fff; border: none; border-radius: 8px;
+      padding: 12px; font-size: 14px; font-weight: 600; cursor: pointer;
+      width: 100%; font-family: inherit; transition: background 0.15s;
+    }
+    .btn-start-briefing:hover { background: var(--orange-dark); }
+    .sidebar-note { color: rgba(255,255,255,0.35); font-size: 11px; text-align: center; }
+
+    /* ── CHAT COLUMN ── */
+    .chat-column { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: var(--bg); }
+
+    #chat {
+      flex: 1; overflow-y: auto; padding: 24px 20px;
+      display: flex; flex-direction: column; gap: 14px; scroll-behavior: smooth;
+    }
+    .msg { display: flex; max-width: 100%; }
+    .msg.user { justify-content: flex-end; }
+    .msg.agent { justify-content: flex-start; }
+    .bubble { border-radius: 18px; font-size: 15px; line-height: 1.6; }
+    .msg.user .bubble {
+      background: var(--navy); color: #fff; padding: 12px 18px;
+      border-bottom-right-radius: 4px; max-width: 70%;
+    }
+    .msg.agent .bubble {
+      background: var(--white); color: var(--text); padding: 16px 20px;
+      border-bottom-left-radius: 4px; max-width: 85%; box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    /* briefing-ready bubble */
+    .briefing-ready-bubble {
+      background: var(--white); border-radius: 16px; padding: 20px 24px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.1); max-width: 380px;
+    }
+    .briefing-ready-bubble h4 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+    .briefing-ready-bubble p { font-size: 13px; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
+    .btn-view-briefing {
+      background: var(--orange); color: #fff; border: none; border-radius: 8px;
+      padding: 10px 20px; font-size: 13px; font-weight: 700; cursor: pointer;
+      font-family: inherit; transition: background 0.15s; display: inline-flex; align-items: center; gap: 6px;
+    }
+    .btn-view-briefing:hover { background: var(--orange-dark); }
+
+    /* ── WELCOME STATE ── */
+    .welcome-card {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; padding: 48px 32px; background: var(--white); border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); margin: auto; max-width: 520px; width: 100%;
+    }
+    .welcome-logo { font-size: 52px; margin-bottom: 16px; }
+    .welcome-card h2 { font-size: 22px; font-weight: 700; color: var(--navy); margin-bottom: 8px; }
+    .welcome-card p { font-size: 15px; color: var(--muted); margin-bottom: 28px; line-height: 1.5; }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+    .example-chip {
+      padding: 8px 14px; border-radius: 20px; border: 1.5px solid var(--border);
+      background: var(--bg); color: var(--navy); font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: all 0.15s; font-family: inherit;
+    }
+    .example-chip:hover { border-color: var(--accent); background: #e8f4fa; color: var(--accent); }
+
+    /* ── TYPING INDICATOR ── */
+    .loader {
+      display: flex; align-items: center; gap: 5px; padding: 16px 20px;
+      background: var(--white); border-radius: 18px; border-bottom-left-radius: 4px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08); width: fit-content;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--navy); animation: bounce 1.2s ease-in-out infinite; }
+    .dot:nth-child(2) { animation-delay: 0.2s; }
+    .dot:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0.55); opacity: 0.35; }
+      40% { transform: scale(1); opacity: 1; }
+    }
+
+    /* ── INPUT AREA ── */
+    #input-area { flex-shrink: 0; border-top: 1px solid var(--border); background: var(--white); padding: 12px 16px 14px; }
+    .input-row { display: flex; gap: 8px; align-items: flex-end; }
+    #user-input {
+      flex: 1; border: 1.5px solid var(--border); border-radius: 12px; padding: 10px 14px;
+      font-size: 14.5px; font-family: inherit; resize: none; line-height: 1.5;
+      max-height: 100px; overflow-y: auto; outline: none; transition: border-color 0.15s;
+      background: var(--bg); color: var(--text);
+    }
+    #user-input:focus { border-color: var(--navy); background: #fff; }
+    #user-input:disabled { opacity: 0.6; cursor: not-allowed; }
+    #user-input::placeholder { color: var(--muted); }
+    .btn-icon {
+      width: 40px; height: 40px; border-radius: 10px; border: 1.5px solid var(--border);
+      background: var(--bg); color: var(--muted); cursor: pointer; display: flex;
+      align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.15s; font-size: 16px;
+    }
+    .btn-icon:hover { border-color: var(--navy); color: var(--navy); }
+    #btn-send {
+      width: 40px; height: 40px; border-radius: 10px; border: none; background: var(--navy);
+      color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; transition: background 0.15s; font-size: 16px;
+    }
+    #btn-send:hover:not(:disabled) { background: var(--navy-dark); }
+    #btn-send:disabled { background: #a0b0c3; cursor: not-allowed; }
+    .input-hint { font-size: 11px; color: var(--muted); margin-top: 6px; text-align: center; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 80px; left: 50%;
+      transform: translateX(-50%) translateY(20px);
+      background: var(--green); color: #fff; padding: 10px 20px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; opacity: 0; transition: all 0.3s;
+      pointer-events: none; z-index: 9999; white-space: nowrap;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── SIDEBAR OVERLAY (mobile) ── */
+    .sidebar-overlay {
+      display: none; position: fixed; inset: 72px 0 0 0;
+      background: rgba(0,0,0,0.5); z-index: 50;
+    }
+    .sidebar-overlay.open { display: block; }
+
+    /* ════════════════════════════════════════════════════════════
+       BRIEFING MODAL
+    ════════════════════════════════════════════════════════════ */
+    @keyframes slideUp {
+      from { transform: translateY(100vh); opacity: 0; }
+      to   { transform: translateY(0);     opacity: 1; }
+    }
+    #briefing-modal {
+      position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+      z-index: 99999; overflow-y: auto; background: #F0F4F8;
+      opacity: 0; pointer-events: none; transform: translateY(100vh);
+      transition: none;
+    }
+    #briefing-modal.modal-hidden { opacity: 0; pointer-events: none; transform: translateY(100vh); }
+    #briefing-modal.modal-visible {
+      opacity: 1; pointer-events: all; transform: translateY(0);
+      animation: slideUp 0.4s ease-out;
+    }
+
+    /* Modal toolbar */
+    .modal-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      padding: 16px 20px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.55) 0%, transparent 100%);
+      pointer-events: none;
+    }
+    .modal-toolbar > * { pointer-events: all; }
+    .modal-toolbar-btn {
+      width: 40px; height: 40px; border-radius: 50%; border: none; cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 16px;
+      transition: all 0.15s; font-family: inherit;
+    }
+    #modal-share-btn {
+      background: rgba(255,255,255,0.15); color: #fff; border: 1.5px solid rgba(255,255,255,0.5);
+    }
+    #modal-share-btn:hover { background: rgba(255,255,255,0.25); }
+    #modal-close-btn {
+      background: rgba(0,0,0,0.55); color: #fff;
+    }
+    #modal-close-btn:hover { background: rgba(0,0,0,0.8); }
+
+    /* share tooltip */
+    .share-tooltip {
+      position: absolute; top: 60px; right: 20px; background: var(--text); color: #fff;
+      padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 600;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s; white-space: nowrap;
+    }
+    .share-tooltip.show { opacity: 1; }
+
+    /* Modal content body */
+    #modal-body {
+      min-height: 100%;
+    }
+
+    /* ── HERO IMAGE ── */
+    .modal-hero {
+      position: relative;
+      width: 100%;
+      height: 280px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .modal-hero img {
+      width: 100%; height: 100%; object-fit: cover; display: block;
+      background: var(--navy);
+    }
+    .modal-hero-overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.75) 100%);
+    }
+    .modal-hero-content {
+      position: absolute; bottom: 20px; left: 24px; right: 24px;
+      display: flex; align-items: flex-end; justify-content: space-between;
+    }
+    .modal-hero-left {}
+    .modal-hero-dest {
+      font-size: 36px; font-weight: 700; color: #fff;
+      line-height: 1.1; text-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+    .modal-hero-dates {
+      font-size: 16px; color: rgba(255,255,255,0.85); margin-top: 4px;
+      font-weight: 400; text-shadow: 0 1px 4px rgba(0,0,0,0.4);
+    }
+    .modal-powered-badge {
+      background: rgba(0,0,0,0.45); color: rgba(255,255,255,0.8);
+      font-size: 11px; font-weight: 600; padding: 5px 10px; border-radius: 6px;
+      letter-spacing: 0.04em; white-space: nowrap; border: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* ── SCORE HERO ── */
+    .score-hero {
+      background: linear-gradient(135deg, #1E3A5F 0%, #0D2137 100%);
+      padding: 36px 24px 32px;
+      text-align: center;
+    }
+    .score-label {
+      font-size: 11px; font-weight: 700; color: #7fa8cc;
+      text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 8px;
+    }
+    .score-number {
+      font-size: 120px; font-weight: 700; line-height: 1;
+      margin-bottom: 4px; font-variant-numeric: tabular-nums;
+    }
+    .score-denom { font-size: 18px; color: rgba(255,255,255,0.45); margin-bottom: 12px; }
+    .risk-comment {
+      font-size: 16px; color: rgba(255,255,255,0.8); font-style: italic;
+      max-width: 540px; margin: 0 auto 24px; line-height: 1.5;
+    }
+    /* score pills row */
+    .score-pills {
+      display: flex; gap: 8px; justify-content: center;
+      flex-wrap: wrap; max-width: 640px; margin: 0 auto;
+    }
+    .score-pill {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 8px 14px; border-radius: 24px; font-family: inherit;
+      min-width: 72px;
+    }
+    .score-pill .pill-emoji { font-size: 16px; }
+    .score-pill .pill-name { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; opacity: 0.85; }
+    .score-pill .pill-score { font-size: 15px; font-weight: 700; }
+    .score-pill.pill-red { background: rgba(198,40,40,0.3); color: #ff8a80; border: 1px solid rgba(198,40,40,0.5); }
+    .score-pill.pill-amber { background: rgba(230,81,0,0.3); color: #ffcc80; border: 1px solid rgba(230,81,0,0.5); }
+    .score-pill.pill-green { background: rgba(46,125,50,0.3); color: #a5d6a7; border: 1px solid rgba(46,125,50,0.5); }
+
+    /* ── MODAL SECTIONS WRAPPER ── */
+    .modal-sections {
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 860px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ── MODAL SECTION CARDS ── */
+    .modal-risk-card {
+      background: var(--white); border-radius: 16px; overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .modal-risk-card.border-red { border-left: 4px solid var(--red); }
+    .modal-risk-card.border-amber { border-left: 4px solid #FF8F00; }
+    .modal-risk-card.border-green { border-left: 4px solid var(--green); }
+    .modal-risk-card.border-navy { border-left: 4px solid var(--navy); }
+
+    .modal-card-header {
+      display: flex; align-items: center; gap: 12px;
+      padding: 18px 20px; border-bottom: 1px solid var(--border);
+    }
+    .modal-card-emoji { font-size: 22px; flex-shrink: 0; }
+    .modal-card-header h3 {
+      font-size: 17px; font-weight: 700; color: var(--navy); flex: 1;
+    }
+    .modal-badge {
+      font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 20px;
+      text-transform: uppercase; letter-spacing: 0.05em; color: #fff; flex-shrink: 0;
+    }
+    .modal-badge-low { background: var(--green); }
+    .modal-badge-medium { background: #FF8F00; }
+    .modal-badge-high { background: var(--red); }
+    .modal-badge-critical { background: #7b0000; }
+
+    .modal-card-body { padding: 18px 20px; display: flex; flex-direction: column; gap: 14px; }
+    .modal-risk-summary { font-size: 14px; color: var(--muted); font-style: italic; line-height: 1.6; }
+
+    .modal-subsection-title {
+      font-size: 11px; font-weight: 700; color: var(--navy);
+      text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .modal-subsection-title::before { content: ''; display: block; width: 3px; height: 14px; border-radius: 2px; background: var(--accent); }
+
+    .modal-bullets { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .modal-bullets li {
+      font-size: 14px; color: var(--text); line-height: 1.55;
+      padding-left: 18px; position: relative;
+    }
+    .modal-bullets li::before { content: '•'; position: absolute; left: 0; font-weight: 700; }
+    .modal-bullets.red li::before { color: var(--red); }
+    .modal-bullets.amber li::before { color: #FF8F00; }
+    .modal-bullets.green li::before { color: var(--green); }
+    .modal-bullets.navy li::before { color: var(--accent); }
+
+    /* ── TOP 3 DRAMATIC CARDS ── */
+    .top3-section { padding: 0 0 4px; }
+    .top3-title {
+      font-size: 11px; font-weight: 700; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .top3-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .top3-card {
+      background: #7F1D1D; border-radius: 14px; padding: 24px 16px 20px;
+      text-align: center; position: relative; overflow: hidden;
+      box-shadow: 0 4px 16px rgba(127,29,29,0.3);
+    }
+    .top3-watermark {
+      position: absolute; bottom: -10px; right: 6px;
+      font-size: 80px; font-weight: 900; color: rgba(255,255,255,0.07);
+      line-height: 1; user-select: none; pointer-events: none;
+    }
+    .top3-icon { font-size: 26px; margin-bottom: 10px; display: block; }
+    .top3-text { font-size: 13px; font-weight: 700; color: #fff; line-height: 1.5; margin-bottom: 10px; }
+    .top3-label { font-size: 11px; color: #f87171; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* ── NAVY CHECKLIST CARD ── */
+    .modal-checklist-card {
+      background: var(--navy); border-radius: 16px; padding: 24px;
+      box-shadow: 0 2px 12px rgba(30,58,95,0.25);
+    }
+    .modal-checklist-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;
+    }
+    .modal-checklist-title { font-size: 15px; font-weight: 700; color: #fff; }
+    .checklist-progress-wrap { margin-bottom: 18px; }
+    .checklist-progress-label {
+      font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 6px;
+    }
+    .checklist-progress-bar {
+      height: 6px; background: rgba(255,255,255,0.15); border-radius: 3px; overflow: hidden;
+    }
+    .checklist-progress-fill {
+      height: 100%; background: var(--green); border-radius: 3px;
+      transition: width 0.3s ease; width: 0%;
+    }
+    .modal-checklist-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+      cursor: pointer;
+    }
+    .modal-checklist-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .modal-checklist-item input[type="checkbox"] {
+      width: 18px; height: 18px; accent-color: var(--green); cursor: pointer;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .modal-checklist-item span { font-size: 14px; color: rgba(255,255,255,0.9); line-height: 1.5; }
+    .modal-checklist-item.checked span { text-decoration: line-through; color: rgba(255,255,255,0.4); }
+
+    /* ── ADVISORY NOTE ── */
+    .modal-advisory {
+      font-size: 13px; color: var(--muted); line-height: 1.7;
+      border-top: 1px solid var(--border); padding-top: 16px;
+    }
+
+    /* ── MODAL FOOTER ── */
+    .modal-footer {
+      text-align: center; padding: 16px 24px 32px;
+    }
+    .btn-back-to-chat {
+      background: none; border: none; color: var(--muted); font-size: 14px;
+      cursor: pointer; font-family: inherit; font-weight: 500;
+      text-decoration: underline; text-underline-offset: 3px;
+      transition: color 0.15s; padding: 8px;
+    }
+    .btn-back-to-chat:hover { color: var(--navy); }
+
+    /* ── WELCOME SCREEN ── */
+    #chat.welcome-mode {
+      background: linear-gradient(180deg, #0D2137 0%, #1E3A5F 100%);
+      padding: 0; gap: 0;
+    }
+    .welcome-screen {
+      height: 100%; overflow-y: auto; display: flex; flex-direction: column;
+      align-items: center; justify-content: center; text-align: center; padding: 40px 24px;
+    }
+    .ws-logo { font-size: 64px; margin-bottom: 16px; }
+    .ws-title { font-size: 42px; font-weight: 700; color: #fff; margin-bottom: 12px; letter-spacing: -0.5px; line-height: 1.1; }
+    .ws-tagline { font-size: 18px; color: #90CAF9; margin-bottom: 24px; }
+    .ws-divider { width: 60px; height: 2px; background: rgba(255,255,255,0.2); border-radius: 1px; margin: 0 auto 24px; }
+    .ws-hint { font-size: 15px; color: rgba(255,255,255,0.5); margin-bottom: 36px; }
+    .trip-cards { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; max-width: 700px; }
+    .trip-card {
+      border: 1.5px solid rgba(255,255,255,0.22); border-radius: 14px; padding: 20px 18px;
+      text-align: left; cursor: pointer; background: rgba(255,255,255,0.05);
+      transition: all 0.2s; min-width: 180px; flex: 1; max-width: 220px;
+    }
+    .trip-card:hover { border-color: var(--orange); transform: scale(1.03); background: rgba(232,99,10,0.1); }
+    .tc-icon { font-size: 26px; margin-bottom: 10px; display: block; }
+    .tc-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+    .tc-desc { font-size: 12px; color: rgba(255,255,255,0.5); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: fixed; top: 72px; left: 0; bottom: 0; z-index: 60;
+        transform: translateX(-100%); transition: transform 0.3s ease; width: 300px;
+      }
+      .sidebar.open { transform: translateX(0); }
+      #btn-mobile-menu { display: flex; }
+      .header-actions .btn-outline-white { display: none; }
+      .msg.agent .bubble { max-width: 95%; }
+      .msg.user .bubble { max-width: 85%; }
+      .top3-grid { grid-template-columns: 1fr; }
+      .score-number { font-size: 80px; }
+      .modal-hero-dest { font-size: 26px; }
+      .score-pills { overflow-x: auto; flex-wrap: nowrap; justify-content: flex-start; padding-bottom: 4px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <button id="btn-mobile-menu" aria-label="Menu">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    </svg>
+  </button>
+  <div class="header-brand">
+    <div class="header-logo">✈️</div>
+    <div>
+      <h1>TripSafe</h1>
+      <div class="tagline">Know what could go wrong before you go</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-outline-white" id="btn-upload-header">📎 Upload Itinerary PDF</button>
+    <button class="btn-orange" id="btn-new-trip">Start New Trip</button>
+  </div>
+</header>
+
+<div class="main">
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-title">Your Trip</div>
+    <div class="sidebar-field">
+      <label>✈️ Where are you going?</label>
+      <input type="text" class="sidebar-input" id="sb-destination" placeholder="e.g. Bali, Thailand, Morocco" />
+    </div>
+    <div class="sidebar-field">
+      <label>📅 Travel dates</label>
+      <div style="display:flex;gap:8px;margin-top:6px;">
+        <div style="flex:1;">
+          <label style="color:#90CAF9;font-size:11px;display:block;margin-bottom:4px;">FROM</label>
+          <input type="date" id="dateFrom" style="width:100%;background:#0D2137;color:white;border:1px solid #2E86AB;border-radius:8px;padding:8px;font-size:13px;color-scheme:dark;">
+        </div>
+        <div style="flex:1;">
+          <label style="color:#90CAF9;font-size:11px;display:block;margin-bottom:4px;">TO</label>
+          <input type="date" id="dateTo" style="width:100%;background:#0D2137;color:white;border:1px solid #2E86AB;border-radius:8px;padding:8px;font-size:13px;color-scheme:dark;">
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-field">
+      <label>👥 Who is travelling?</label>
+      <div class="party-pills">
+        <button class="pill" data-party="Solo">Solo</button>
+        <button class="pill" data-party="Couple">Couple</button>
+        <button class="pill" data-party="Family">Family</button>
+        <button class="pill" data-party="Group">Group</button>
+      </div>
+    </div>
+    <div class="sidebar-field">
+      <label>⚠️ What are you worried about?</label>
+      <div class="concerns-grid">
+        <label class="concern-item"><input type="checkbox" value="Safety" /> Safety</label>
+        <label class="concern-item"><input type="checkbox" value="Health" /> Health</label>
+        <label class="concern-item"><input type="checkbox" value="Transport" /> Transport</label>
+        <label class="concern-item"><input type="checkbox" value="Documents" /> Documents</label>
+        <label class="concern-item"><input type="checkbox" value="Weather" /> Weather</label>
+        <label class="concern-item"><input type="checkbox" value="Activities" /> Activities</label>
+        <label class="concern-item"><input type="checkbox" value="Money" /> Money</label>
+      </div>
+    </div>
+    <hr class="sidebar-divider" />
+    <button class="btn-start-briefing" id="btn-start-briefing">🚀 Start My Risk Briefing</button>
+    <div class="sidebar-note">Or just describe your trip in the chat below</div>
+  </aside>
+
+  <div class="chat-column">
+    <div id="chat"></div>
+    <div id="input-area">
+      <div class="input-row">
+        <button class="btn-icon" id="btn-upload-clip" title="Upload PDF itinerary">📎</button>
+        <textarea id="user-input" rows="1" placeholder="Describe your trip or answer the question above…"></textarea>
+        <button id="btn-send" title="Send">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+        </button>
+      </div>
+      <div class="input-hint">Press Enter to send · Shift+Enter for new line</div>
+    </div>
+  </div>
+</div>
+
+<!-- BRIEFING MODAL -->
+<div id="briefing-modal" class="modal-hidden">
+  <div class="modal-toolbar">
+    <div style="position:relative">
+      <button class="modal-toolbar-btn" id="modal-share-btn" title="Share">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+      </button>
+      <div class="share-tooltip" id="share-tooltip">Link copied!</div>
+    </div>
+    <button class="modal-toolbar-btn" id="modal-close-btn" title="Close">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+      </svg>
+    </button>
+  </div>
+  <div id="modal-body"></div>
+</div>
+
+<div id="toast"></div>
+<input type="file" id="pdf-input" accept="application/pdf" style="display:none" />
+
+<script>
+  function cleanMd(text) {
+    if (!text) return '';
+    return text
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>')
+      .replace(/^#{1,3}\s+/gm, '');
+  }
+
+  const chat = document.getElementById('chat');
+  const inputEl = document.getElementById('user-input');
+  const btnSend = document.getElementById('btn-send');
+  const btnNew = document.getElementById('btn-new-trip');
+  const btnUploadHeader = document.getElementById('btn-upload-header');
+  const btnUploadClip = document.getElementById('btn-upload-clip');
+  const pdfInput = document.getElementById('pdf-input');
+  const btnStartBriefing = document.getElementById('btn-start-briefing');
+  const btnMobileMenu = document.getElementById('btn-mobile-menu');
+  const sidebar = document.getElementById('sidebar');
+  const sidebarOverlay = document.getElementById('sidebar-overlay');
+  const toast = document.getElementById('toast');
+  const briefingModal = document.getElementById('briefing-modal');
+  const modalBody = document.getElementById('modal-body');
+  const modalCloseBtn = document.getElementById('modal-close-btn');
+  const modalShareBtn = document.getElementById('modal-share-btn');
+  const shareTooltip = document.getElementById('share-tooltip');
+
+  const SECTIONS = ['SAFETY & CRIME','TRANSPORT','HEALTH & MEDICAL','DOCUMENTS & ADMIN','WEATHER & ENVIRONMENT','ACTIVITIES','MONEY'];
+  const SECTION_EMOJIS = { 'SAFETY & CRIME':'🔒','TRANSPORT':'🚗','HEALTH & MEDICAL':'💊','DOCUMENTS & ADMIN':'📋','WEATHER & ENVIRONMENT':'🌦','ACTIVITIES':'🏄','MONEY':'💰' };
+  const SECTION_SHORT = { 'SAFETY & CRIME':'Safety','TRANSPORT':'Transport','HEALTH & MEDICAL':'Health','DOCUMENTS & ADMIN':'Docs','WEATHER & ENVIRONMENT':'Weather','ACTIVITIES':'Activities','MONEY':'Money' };
+
+  let messages = [];
+  let selectedParty = '';
+  let lastBriefingText = '';
+
+  // ── Mobile sidebar ─────────────────────────────────────────
+  function toggleSidebar() {
+    sidebar.classList.toggle('open');
+    sidebarOverlay.classList.toggle('open');
+  }
+  btnMobileMenu.addEventListener('click', toggleSidebar);
+  sidebarOverlay.addEventListener('click', toggleSidebar);
+
+  // ── Party pills ────────────────────────────────────────────
+  document.querySelectorAll('.pill[data-party]').forEach(pill => {
+    pill.addEventListener('click', () => {
+      document.querySelectorAll('.pill[data-party]').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      selectedParty = pill.dataset.party;
+    });
+  });
+
+  // ── Toast ──────────────────────────────────────────────────
+  function showToast(msg, duration = 2500) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), duration);
+  }
+
+  function scrollBottom() {
+    chat.scrollTo({ top: chat.scrollHeight, behavior: 'smooth' });
+  }
+
+  // ── Welcome ────────────────────────────────────────────────
+  function showWelcome() {
+    chat.innerHTML = '';
+    chat.classList.add('welcome-mode');
+    const screen = document.createElement('div');
+    screen.className = 'welcome-screen';
+    screen.id = 'welcome-card';
+    screen.innerHTML = `
+      <div class="ws-logo">✈️</div>
+      <div class="ws-title">TripSafe</div>
+      <div class="ws-tagline">Know what could go wrong before you go</div>
+      <div class="ws-divider"></div>
+      <div class="ws-hint">Fill in your trip details in the sidebar and click Continue →</div>
+      <div class="trip-cards">
+        <div class="trip-card" data-dest="Bangkok, Thailand">
+          <span class="tc-icon">🏖</span>
+          <div class="tc-name">Bangkok, Thailand</div>
+          <div class="tc-desc">Solo backpacking · 2 weeks</div>
+        </div>
+        <div class="trip-card" data-dest="Morocco">
+          <span class="tc-icon">🏔</span>
+          <div class="tc-name">Morocco</div>
+          <div class="tc-desc">Family holiday · 10 days</div>
+        </div>
+        <div class="trip-card" data-dest="Southeast Asia">
+          <span class="tc-icon">🌊</span>
+          <div class="tc-name">Southeast Asia</div>
+          <div class="tc-desc">Multi-country · 6 weeks</div>
+        </div>
+      </div>`;
+    chat.appendChild(screen);
+    screen.querySelectorAll('.trip-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.getElementById('sb-destination').value = card.dataset.dest;
+        if (window.innerWidth <= 768) { sidebar.classList.add('open'); sidebarOverlay.classList.add('open'); }
+        document.getElementById('sb-destination').focus();
+      });
+    });
+  }
+
+  function removeWelcome() {
+    const wc = document.getElementById('welcome-card');
+    if (wc) wc.remove();
+    chat.classList.remove('welcome-mode');
+  }
+
+  // ── Append message ─────────────────────────────────────────
+  function appendMessage(role, content) {
+    removeWelcome();
+    const wrap = document.createElement('div');
+    wrap.className = `msg ${role}`;
+    const bubble = document.createElement('div');
+    bubble.className = 'bubble';
+
+    if (role === 'agent' && shouldOpenModal(content)) {
+      lastBriefingText = content;
+      // Orange re-open button in chat stream
+      const floatWrap = document.createElement('div');
+      floatWrap.style.cssText = 'display:flex;justify-content:center;padding:16px 0;';
+      const floatBtn = document.createElement('button');
+      floatBtn.style.cssText = 'background:#E8630A;color:#fff;border:none;border-radius:10px;padding:14px 28px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;box-shadow:0 4px 16px rgba(232,99,10,0.35);transition:background 0.15s;';
+      floatBtn.innerHTML = '📊 View Risk Briefing →';
+      floatBtn.onmouseenter = () => floatBtn.style.background = '#cf570a';
+      floatBtn.onmouseleave = () => floatBtn.style.background = '#E8630A';
+      floatBtn.addEventListener('click', () => openResultsModal(content));
+      floatWrap.appendChild(floatBtn);
+      chat.appendChild(floatWrap);
+      scrollBottom();
+      setTimeout(() => {
+        openResultsModal(content);
+        renderBriefingIntoModal(window.lastBriefingText || content);
+        fetchScores(window.lastBriefingText || content, window.currentDestination || '').then(scores => {
+          if (scores) {
+            console.log('Scores received, updating hero:', scores);
+            const heroContainer = document.getElementById('score-hero-container');
+            if (heroContainer && typeof renderScoreHero === 'function') {
+              heroContainer.innerHTML = renderScoreHero(scores);
+            }
+            document.querySelectorAll('[data-section]').forEach(card => {
+              const key = card.getAttribute('data-section');
+              const scoreEl = card.querySelector('.section-score');
+              if (scoreEl && scores[key] !== undefined) {
+                const s = scores[key];
+                const c = s >= 7 ? '#FF3B30' : s >= 4 ? '#FF9500' : '#34C759';
+                scoreEl.innerHTML = '<span style="font-size:28px;font-weight:900;color:'+c+';">'+s+'</span><span style="font-size:12px;color:#94A3B8;">/10</span>';
+              }
+            });
+          }
+        });
+      }, 300);
+      return;
+    }
+
+    if (role === 'agent') {
+      bubble.innerHTML = renderMarkdown(content);
+    } else {
+      bubble.textContent = content;
+    }
+    wrap.appendChild(bubble);
+    chat.appendChild(wrap);
+    scrollBottom();
+  }
+
+  // ── Markdown renderer ──────────────────────────────────────
+  function applyInline(text) {
+    return text
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\*(.+?)\*/g, '<em>$1</em>');
+  }
+  function renderMarkdown(raw) {
+    const lines = raw.split('\n');
+    const out = [];
+    let paraLines = [];
+    const flushPara = () => {
+      if (!paraLines.length) return;
+      out.push(`<p style="margin-bottom:8px">${paraLines.join('<br>')}</p>`);
+      paraLines = [];
+    };
+    lines.forEach(line => {
+      const t = line.trim();
+      if (!t) { flushPara(); return; }
+      if (/^-{3,}$/.test(t)) { flushPara(); out.push('<hr style="border:none;border-top:1px solid #E2E8F0;margin:8px 0;">'); return; }
+      const numM = t.match(/^(\d+)\.\s+(.+)/);
+      if (numM) {
+        flushPara();
+        out.push(`<div style="display:flex;gap:10px;margin:6px 0;align-items:flex-start;"><span style="background:#1E3A5F;color:white;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:bold;flex-shrink:0;">${numM[1]}</span><span>${applyInline(numM[2])}</span></div>`);
+        return;
+      }
+      if (/^[-•]\s/.test(t)) {
+        flushPara();
+        out.push(`<div style="display:flex;gap:8px;margin:4px 0;"><span style="color:#2E86AB;margin-top:2px;">•</span><span>${applyInline(t.replace(/^[-•]\s+/, ''))}</span></div>`);
+        return;
+      }
+      paraLines.push(applyInline(t));
+    });
+    flushPara();
+    return `<div style="line-height:1.6">${out.join('')}</div>`;
+  }
+
+  function showLoader() {
+    removeWelcome();
+    const wrap = document.createElement('div');
+    wrap.className = 'msg agent';
+    wrap.id = 'loader-msg';
+    wrap.innerHTML = '<div class="loader"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>';
+    chat.appendChild(wrap);
+    scrollBottom();
+  }
+  function removeLoader() { const el = document.getElementById('loader-msg'); if (el) el.remove(); }
+
+  // ── Detection ──────────────────────────────────────────────
+  function shouldOpenModal(text) {
+    const triggers = [
+      'SCORECARD_START',
+      'SCORECARD_END',
+      'Here is your personalised TripSafe risk briefing',
+      'personalised TripSafe risk briefing',
+      'TRIPSAFE RISK BRIEFING',
+      'TripSafe risk briefing'
+    ];
+    const found = triggers.some(trigger => text.includes(trigger));
+    console.log('shouldOpenModal result:', found, '| text start:', text.substring(0, 100));
+    return found;
+  }
+
+  // ── Section → score key map ────────────────────────────────
+  const SECTION_SCORE_KEY = {
+    'SAFETY & CRIME': 'safety',
+    'TRANSPORT': 'transport',
+    'HEALTH & MEDICAL': 'health',
+    'DOCUMENTS & ADMIN': 'documents',
+    'WEATHER & ENVIRONMENT': 'weather',
+    'ACTIVITIES': 'activities',
+    'MONEY': 'money'
+  };
+
+  // ── Fetch scores from dedicated API ───────────────────────
+  async function fetchScores(briefingText, destination) {
+    console.log('Fetching scores, briefing length:', briefingText.length);
+    try {
+      const response = await fetch('/api/score', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ briefingText, destination })
+      });
+      const data = await response.json();
+      console.log('Score fetch result:', data);
+      return (data.success && data.scores) ? data.scores : null;
+    } catch (err) {
+      console.error('Score fetch error:', err);
+      return null;
+    }
+  }
+
+  // ── Extract destination from text ─────────────────────────
+  function extractDestination(text) {
+    const m = text.match(/risk briefing for ([^:\n]+)/i);
+    if (m) return m[1].trim().replace(/[:\n].*/, '').trim();
+    // fallback: sidebar
+    return document.getElementById('sb-destination').value.trim() || 'Your Destination';
+  }
+
+  function extractDates() {
+    const from = document.getElementById('dateFrom')?.value || '';
+    const to = document.getElementById('dateTo')?.value || '';
+    const fmt = d => new Date(d + 'T00:00:00').toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    if (from && to) return `${fmt(from)} – ${fmt(to)}`;
+    if (from) return `From ${fmt(from)}`;
+    return '';
+  }
+
+  // ── Risk level helpers ─────────────────────────────────────
+  function getRiskLevel(level) {
+    const l = (level || '').toLowerCase().trim();
+    if (l === 'critical') return 'critical';
+    if (l === 'high') return 'high';
+    if (l === 'medium') return 'medium';
+    return 'low';
+  }
+  function getBorderClass(level) {
+    const l = getRiskLevel(level);
+    if (l === 'critical' || l === 'high') return 'border-red';
+    if (l === 'medium') return 'border-amber';
+    return 'border-green';
+  }
+  function getBulletClass(level) {
+    const l = getRiskLevel(level);
+    if (l === 'critical' || l === 'high') return 'red';
+    if (l === 'medium') return 'amber';
+    return 'green';
+  }
+  function getModalBadgeClass(level) {
+    const l = getRiskLevel(level);
+    return `modal-badge modal-badge-${l}`;
+  }
+  // ── Score hero renderer ────────────────────────────────────
+  function renderScoreHero(scores) {
+    const total = scores.total;
+    const comment = scores.comment || '';
+    let scoreColour, riskLabel, heroBg;
+    if (total >= 43) {
+      scoreColour = '#FF3B30'; riskLabel = 'HIGH RISK';
+      heroBg = 'linear-gradient(180deg, #450a0a 0%, #1E3A5F 100%)';
+    } else if (total >= 22) {
+      scoreColour = '#FF9500'; riskLabel = 'MEDIUM RISK';
+      heroBg = 'linear-gradient(180deg, #431407 0%, #1E3A5F 100%)';
+    } else {
+      scoreColour = '#34C759'; riskLabel = 'LOW RISK';
+      heroBg = 'linear-gradient(180deg, #052e16 0%, #1E3A5F 100%)';
+    }
+    const categories = [
+      { key: 'safety',     emoji: '🔒', label: 'Safety' },
+      { key: 'transport',  emoji: '🚗', label: 'Transport' },
+      { key: 'health',     emoji: '💊', label: 'Health' },
+      { key: 'documents',  emoji: '📋', label: 'Docs' },
+      { key: 'weather',    emoji: '🌦', label: 'Weather' },
+      { key: 'activities', emoji: '🏄', label: 'Activities' },
+      { key: 'money',      emoji: '💰', label: 'Money' }
+    ];
+    const pillsHTML = categories.map(cat => {
+      const score = scores[cat.key] || 0;
+      const colour = score >= 7 ? '#FF3B30' : score >= 4 ? '#FF9500' : '#34C759';
+      const bg = score >= 7 ? 'rgba(255,59,48,0.2)' : score >= 4 ? 'rgba(255,149,0,0.2)' : 'rgba(52,199,89,0.2)';
+      return `<div style="background:${bg};border:2px solid ${colour};border-radius:16px;padding:10px 14px;display:inline-flex;flex-direction:column;align-items:center;gap:3px;min-width:82px;">
+        <span style="font-size:22px;">${cat.emoji}</span>
+        <span style="font-size:9px;color:#90CAF9;text-transform:uppercase;letter-spacing:1px;font-weight:700;">${cat.label}</span>
+        <span style="font-size:26px;font-weight:900;color:${colour};line-height:1;">${score}</span>
+        <span style="font-size:9px;color:#64748B;">/ 10</span>
+      </div>`;
+    }).join('');
+    return `<div style="background:${heroBg};padding:48px 32px;text-align:center;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:3px;color:#90CAF9;text-transform:uppercase;margin-bottom:16px;">OVERALL RISK SCORE</div>
+      <div style="display:inline-block;background:rgba(0,0,0,0.35);border-radius:24px;padding:20px 56px;margin-bottom:16px;">
+        <div style="font-size:120px;font-weight:900;line-height:1;font-family:Arial,sans-serif;color:${scoreColour};">${total}</div>
+        <div style="font-size:16px;color:rgba(255,255,255,0.45);margin-top:4px;">out of 70</div>
+      </div>
+      <div style="margin-bottom:20px;">
+        <span style="background:${scoreColour};color:white;font-size:12px;font-weight:800;letter-spacing:2px;text-transform:uppercase;padding:7px 22px;border-radius:20px;">${riskLabel}</span>
+      </div>
+      <div style="font-size:15px;color:rgba(255,255,255,0.75);font-style:italic;max-width:480px;margin:0 auto 32px auto;">"${comment}"</div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:center;">${pillsHTML}</div>
+    </div>`;
+  }
+
+  function scoreHeroLoading() {
+    return `<div style="background:linear-gradient(180deg,#1a3a5c 0%,#1E3A5F 100%);padding:48px 32px;text-align:center;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:3px;color:#90CAF9;text-transform:uppercase;margin-bottom:24px;">OVERALL RISK SCORE</div>
+      <div style="font-size:64px;margin-bottom:12px;">⏳</div>
+      <div style="font-size:18px;color:#90CAF9;font-style:italic;">Calculating risk scores...</div>
+      <div style="font-size:13px;color:#64748B;margin-top:8px;">Analysing all 7 risk categories</div>
+    </div>`;
+  }
+
+  // ── Open modal ─────────────────────────────────────────────
+  function openResultsModal(rawText) {
+    modalBody.innerHTML = '';
+    const destination = extractDestination(rawText);
+    const dates = extractDates();
+    const text = rawText;
+
+    // Hero image
+    const hero = document.createElement('div');
+    hero.className = 'modal-hero';
+    const heroImg = document.createElement('img');
+    heroImg.alt = destination;
+    heroImg.style.cssText = 'width:100%;height:280px;object-fit:cover;opacity:0;transition:opacity 0.3s;display:block;';
+    heroImg.onload = function() { this.style.opacity = 1; };
+    const attempts = [destination, destination + ' city', destination + ' landscape'];
+    let attempt = 0;
+    function tryNextImage() {
+      if (attempt >= attempts.length) {
+        if (heroImg.parentElement) heroImg.parentElement.style.background = 'linear-gradient(135deg, #1E3A5F 0%, #2E86AB 50%, #0D2137 100%)';
+        heroImg.remove(); return;
+      }
+      heroImg.src = 'https://source.unsplash.com/1600x500/?' + encodeURIComponent(attempts[attempt]) + '&t=' + Date.now();
+      attempt++;
+    }
+    heroImg.onerror = tryNextImage;
+    tryNextImage();
+    const heroOverlay = document.createElement('div');
+    heroOverlay.className = 'modal-hero-overlay';
+    const heroContent = document.createElement('div');
+    heroContent.className = 'modal-hero-content';
+    heroContent.innerHTML = `
+      <div class="modal-hero-left">
+        <div class="modal-hero-dest">${destination}</div>
+        ${dates ? `<div class="modal-hero-dates">${dates}</div>` : ''}
+      </div>
+      <div class="modal-powered-badge">Powered by TripSafe</div>`;
+    hero.appendChild(heroImg);
+    hero.appendChild(heroOverlay);
+    hero.appendChild(heroContent);
+    modalBody.appendChild(hero);
+
+    // Score hero — loading state immediately
+    const scoreHeroContainer = document.createElement('div');
+    scoreHeroContainer.id = 'score-hero-container';
+    scoreHeroContainer.innerHTML = scoreHeroLoading();
+    modalBody.appendChild(scoreHeroContainer);
+
+    // Sections wrapper
+    const sectionsWrap = document.createElement('div');
+    sectionsWrap.className = 'modal-sections';
+    sectionsWrap.id = 'modalSectionsContainer';
+
+    console.log('RAW BRIEFING TEXT FOR PARSING:', text.substring(0, 5000));
+
+    function cleanMarkdown(str) {
+      return str
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>');
+    }
+
+    // Intro line
+    const firstMarker = text.indexOf('---');
+    if (firstMarker > 0) {
+      const introLines = text.slice(0, firstMarker).split('\n').map(l => l.trim()).filter(Boolean);
+      const introLine = introLines.find(l => /I have everything/i.test(l));
+      if (introLine) {
+        const p = document.createElement('p');
+        p.style.cssText = 'font-size:15px;color:var(--muted);font-style:italic;padding:4px 0 8px';
+        p.textContent = introLine;
+        sectionsWrap.appendChild(p);
+      }
+    }
+
+    // Pre-compute section header positions using only the --- SECTION --- format.
+    // This prevents bare section-name words inside body text from acting as false boundaries.
+    const boundaryPositions = [];
+    SECTIONS.forEach(s => {
+      const hi = text.indexOf(`--- ${s} ---`);
+      if (hi !== -1) boundaryPositions.push(hi);
+    });
+    ['OVERALL RISK RATING', 'TOP 3 RISKS'].forEach(marker => {
+      const mi = text.indexOf(marker);
+      if (mi !== -1) boundaryPositions.push(mi);
+    });
+    boundaryPositions.sort((a, b) => a - b);
+
+    // Render each section card
+    SECTIONS.forEach(section => {
+      const headerMarker = `--- ${section} ---`;
+      const idx = text.indexOf(headerMarker);
+      if (idx === -1) return;
+
+      // End = next boundary strictly after idx, or end of text
+      const endIdx = boundaryPositions.find(pos => pos > idx) ?? text.length;
+
+      let block = text.slice(idx, endIdx);
+
+      // Safety net: if block body is too short, try manual extraction from window.lastBriefingText
+      const bodyOnly = block.replace(headerMarker, '').trim();
+      if (bodyOnly.length < 50 && window.lastBriefingText) {
+        console.log('Section', section, 'block too short (' + bodyOnly.length + ' chars), trying manual extraction');
+        const upperText = window.lastBriefingText.toUpperCase();
+        const sectionStart = upperText.indexOf(section.toUpperCase());
+        if (sectionStart !== -1) {
+          const nextSectionNames = ['SAFETY','TRANSPORT','HEALTH','DOCUMENTS','WEATHER','ACTIVITIES','MONEY','OVERALL RISK RATING','TOP 3 RISKS'];
+          let nextStart = window.lastBriefingText.length;
+          nextSectionNames.forEach(next => {
+            if (next.toUpperCase() === section.toUpperCase()) return;
+            const ni = upperText.indexOf(next, sectionStart + section.length + 10);
+            if (ni !== -1 && ni < nextStart) nextStart = ni;
+          });
+          const extracted = window.lastBriefingText.substring(sectionStart, nextStart).trim();
+          if (extracted.length > 30) {
+            block = extracted;
+            console.log('Manual extraction succeeded for', section, 'length:', extracted.length);
+          }
+        }
+      }
+
+      const lines = block.split('\n').map(l => l.trim()).filter(Boolean);
+      const riskLine = lines.find(l => /^RISK LEVEL:/i.test(l));
+      const riskLevel = riskLine ? riskLine.replace(/^RISK LEVEL:\s*/i, '').trim() : '';
+      const summaryLine = lines.find(l => /^RISK SUMMARY:/i.test(l));
+      const summary = summaryLine ? summaryLine.replace(/^RISK SUMMARY:\s*/i, '').trim() : '';
+
+      // Skip empty cards
+      const bodyLines = lines.filter(l =>
+        !/^---/.test(l) && l !== section &&
+        !/^RISK LEVEL:/i.test(l) && !/^RISK SUMMARY:/i.test(l)
+      );
+      if (bodyLines.length === 0) {
+        console.log('Skipping empty section:', section);
+        return;
+      }
+
+      const bulletColour = getBulletClass(riskLevel);
+
+      const card = document.createElement('div');
+      card.className = `modal-risk-card ${getBorderClass(riskLevel)}`;
+      card.dataset.section = SECTION_SCORE_KEY[section] || '';
+
+      const header = document.createElement('div');
+      header.className = 'modal-card-header';
+      header.innerHTML = `
+        <span class="modal-card-emoji">${SECTION_EMOJIS[section] || '📌'}</span>
+        <h3>${section}</h3>
+        ${riskLevel ? `<span class="${getModalBadgeClass(riskLevel)}">${riskLevel}</span>` : ''}
+        <div class="section-score" style="margin-left:auto;flex-shrink:0;"></div>`;
+      card.appendChild(header);
+
+      const body = document.createElement('div');
+      body.className = 'modal-card-body';
+      if (summary) {
+        const p = document.createElement('p');
+        p.className = 'modal-risk-summary';
+        p.textContent = summary;
+        body.appendChild(p);
+      }
+
+      let currentGroup = null, currentBullets = [];
+      const flushGroup = () => {
+        if (!currentGroup && !currentBullets.length) return;
+        if (currentGroup) {
+          const t = document.createElement('div');
+          t.className = 'modal-subsection-title';
+          t.textContent = currentGroup;
+          body.appendChild(t);
+        }
+        if (currentBullets.length) {
+          const ul = document.createElement('ul');
+          ul.className = `modal-bullets ${bulletColour}`;
+          currentBullets.forEach(b => {
+            const li = document.createElement('li');
+            li.innerHTML = cleanMd(b);
+            ul.appendChild(li);
+          });
+          body.appendChild(ul);
+        }
+        currentGroup = null; currentBullets = [];
+      };
+      console.log('Rendering card for section:', section, 'block content:', JSON.stringify(block.substring(0, 300)));
+
+      lines.forEach(line => {
+        if (/^---/.test(line) || line === section || /^RISK LEVEL:/i.test(line) || /^RISK SUMMARY:/i.test(line)) return;
+        if (/^Key risks/i.test(line) || /^What to do before/i.test(line) || /^What to do when/i.test(line)) {
+          flushGroup(); currentGroup = line.replace(/:$/, '');
+        } else if (/^[-•*]\s/.test(line)) {
+          currentBullets.push(line.replace(/^[-•*]\s*/, ''));
+        } else if (/^\d+[.)]\s/.test(line)) {
+          currentBullets.push(line.replace(/^\d+[.)]\s*/, ''));
+        }
+      });
+      flushGroup();
+
+      // Fallback: if body text content is thin, render the raw block directly
+      const bodyTextLength = body.innerText ? body.innerText.trim().length : body.textContent.trim().length;
+      if (bodyTextLength < 20) {
+        console.log('No structured content rendered for', section, '— applying raw fallback');
+        const rawFallback = block
+          .replace(/^---[^-\n]*---\n?/m, '')
+          .replace(/^RISK LEVEL:[^\n]*\n?/im, '')
+          .replace(/^RISK SUMMARY:[^\n]*\n?/im, '')
+          .trim();
+        if (rawFallback.length > 20) {
+          body.innerHTML += '<div style="padding:8px 0;">' +
+            rawFallback
+              .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+              .replace(/\*(.+?)\*/g, '<em>$1</em>')
+              .split('\n')
+              .filter(line => line.trim().length > 2)
+              .map(line => {
+                line = line.trim();
+                if (line.startsWith('-') || line.startsWith('•') || line.startsWith('*')) {
+                  return '<div style="display:flex;gap:10px;margin:6px 0;"><span style="color:#2E86AB;flex-shrink:0;">•</span><span style="font-size:14px;color:#374151;line-height:1.6;">' + line.replace(/^[-•*]\s*/, '') + '</span></div>';
+                }
+                if (line.length > 5) {
+                  return '<p style="font-size:14px;color:#374151;line-height:1.6;margin:6px 0;">' + line + '</p>';
+                }
+                return '';
+              })
+              .join('') +
+          '</div>';
+        }
+      }
+
+      card.appendChild(body);
+      sectionsWrap.appendChild(card);
+    });
+
+    // TOP 3 RISKS
+    if (text.includes('TOP 3 RISKS')) {
+      const t3Start = text.indexOf('TOP 3 RISKS');
+      let t3End = text.indexOf('BEFORE YOU TRAVEL', t3Start);
+      if (t3End === -1) t3End = text.indexOf('Important:', t3Start);
+      if (t3End === -1) t3End = text.length;
+      const t3Lines = text.slice(t3Start, t3End).split('\n').map(l => l.trim()).filter(l => /^\d\./.test(l));
+      if (t3Lines.length) {
+        const sec = document.createElement('div');
+        sec.className = 'top3-section';
+        const ttl = document.createElement('div');
+        ttl.className = 'top3-title';
+        ttl.innerHTML = '⚠️ Top 3 Risks You Must Not Ignore';
+        sec.appendChild(ttl);
+        const grid = document.createElement('div');
+        grid.className = 'top3-grid';
+        t3Lines.slice(0, 3).forEach((line, i) => {
+          const card = document.createElement('div');
+          card.className = 'top3-card';
+          card.innerHTML = `<div class="top3-watermark">${i+1}</div><span class="top3-icon">⚠️</span><div class="top3-text">${line.replace(/^\d\.\s*/, '')}</div><div class="top3-label">Address this first</div>`;
+          grid.appendChild(card);
+        });
+        sec.appendChild(grid);
+        sectionsWrap.appendChild(sec);
+      }
+    }
+
+    // CHECKLIST
+    const clStart = text.search(/BEFORE YOU TRAVEL CHECKLIST/);
+    if (clStart !== -1 || text.includes('☐')) {
+      let clEnd = text.indexOf('Important:', clStart > -1 ? clStart : 0);
+      if (clEnd === -1) clEnd = text.length;
+      const clBlock = clStart > -1 ? text.slice(clStart, clEnd) : text;
+      const clItems = clBlock.split('\n').filter(l => l.trim().startsWith('☐')).map(l => l.replace('☐','').trim());
+      if (clItems.length) {
+        const clCard = document.createElement('div');
+        clCard.className = 'modal-checklist-card';
+        clCard.innerHTML = `<div class="modal-checklist-header"><div class="modal-checklist-title">✅ Before You Travel Checklist</div></div>`;
+        const progressWrap = document.createElement('div');
+        progressWrap.className = 'checklist-progress-wrap';
+        const progressLabel = document.createElement('div');
+        progressLabel.className = 'checklist-progress-label';
+        progressLabel.textContent = 'Trip preparation: 0% complete';
+        const barWrap = document.createElement('div');
+        barWrap.className = 'checklist-progress-bar';
+        const barFill = document.createElement('div');
+        barFill.className = 'checklist-progress-fill';
+        barWrap.appendChild(barFill);
+        progressWrap.appendChild(progressLabel);
+        progressWrap.appendChild(barWrap);
+        clCard.appendChild(progressWrap);
+        let checked = 0;
+        const updateProgress = () => {
+          const pct = Math.round((checked / clItems.length) * 100);
+          barFill.style.width = pct + '%';
+          progressLabel.textContent = `Trip preparation: ${pct}% complete`;
+        };
+        clItems.forEach(item => {
+          const label = document.createElement('label');
+          label.className = 'modal-checklist-item';
+          const cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.addEventListener('change', () => { label.classList.toggle('checked', cb.checked); checked += cb.checked ? 1 : -1; updateProgress(); });
+          const span = document.createElement('span');
+          span.textContent = item;
+          label.appendChild(cb);
+          label.appendChild(span);
+          clCard.appendChild(label);
+        });
+        sectionsWrap.appendChild(clCard);
+      }
+    }
+
+    // Advisory note
+    if (text.includes('Important:')) {
+      const noteStart = text.indexOf('Important:');
+      const note = text.slice(noteStart).trim();
+      const p = document.createElement('p');
+      p.className = 'modal-advisory';
+      p.textContent = note;
+      sectionsWrap.appendChild(p);
+    }
+
+    modalBody.appendChild(sectionsWrap);
+
+    const footer = document.createElement('div');
+    footer.className = 'modal-footer';
+    const backBtn = document.createElement('button');
+    backBtn.className = 'btn-back-to-chat';
+    backBtn.textContent = '← Back to Chat';
+    backBtn.addEventListener('click', closeModal);
+    footer.appendChild(backBtn);
+    modalBody.appendChild(footer);
+
+    // Open modal immediately
+    briefingModal.classList.remove('modal-hidden');
+    briefingModal.classList.add('modal-visible');
+    briefingModal.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+
+    // Fire score API in background, update when ready
+    fetchScores(rawText, destination).then(scores => {
+      if (!scores) return;
+      console.log('Updating score hero with:', scores);
+      scoreHeroContainer.innerHTML = renderScoreHero(scores);
+      // Update section card scores
+      Object.entries(SECTION_SCORE_KEY).forEach(([, scoreKey]) => {
+        const card = modalBody.querySelector(`[data-section="${scoreKey}"]`);
+        if (!card) return;
+        const scoreEl = card.querySelector('.section-score');
+        if (!scoreEl) return;
+        const s = scores[scoreKey];
+        if (s === undefined) return;
+        const c = s >= 7 ? '#FF3B30' : s >= 4 ? '#FF9500' : '#34C759';
+        scoreEl.innerHTML = `<span style="font-size:28px;font-weight:900;color:${c};line-height:1;">${s}</span><span style="font-size:13px;color:#94A3B8;font-weight:500;">/10</span>`;
+      });
+    });
+  }
+
+  function renderBriefingIntoModal(rawText) {
+    console.log('renderBriefingIntoModal called, length:', (rawText||'').length);
+    const container = document.getElementById('modalSectionsContainer');
+    if (!container) { console.error('modalSectionsContainer not found'); return; }
+
+    const cleanText = (rawText || '')
+      .replace(/SCORECARD_START[\s\S]*?SCORECARD_END/gi, '')
+      .trim();
+
+    if (cleanText.length < 10) {
+      container.innerHTML = '<p style="padding:40px;color:#666;text-align:center;">No content found.</p>';
+      return;
+    }
+
+    const sectionDefs = [
+      { key: 'SAFETY & CRIME',          emoji: '🔒', color: '#DC2626' },
+      { key: 'SAFETY AND CRIME',        emoji: '🔒', color: '#DC2626' },
+      { key: 'TRANSPORT',               emoji: '🚗', color: '#EA580C' },
+      { key: 'HEALTH & MEDICAL',        emoji: '💊', color: '#D97706' },
+      { key: 'HEALTH AND MEDICAL',      emoji: '💊', color: '#D97706' },
+      { key: 'DOCUMENTS & ADMIN',       emoji: '📋', color: '#2563EB' },
+      { key: 'DOCUMENTS AND ADMIN',     emoji: '📋', color: '#2563EB' },
+      { key: 'WEATHER & ENVIRONMENT',   emoji: '🌦', color: '#0891B2' },
+      { key: 'WEATHER AND ENVIRONMENT', emoji: '🌦', color: '#0891B2' },
+      { key: 'ACTIVITIES',              emoji: '🏄', color: '#7C3AED' },
+      { key: 'MONEY',                   emoji: '💰', color: '#059669' },
+      { key: 'OVERALL RISK RATING',     emoji: '⚠️',  color: '#1E3A5F' },
+      { key: 'TOP 3 RISKS',             emoji: '🚨', color: '#DC2626' },
+      { key: 'BEFORE YOU TRAVEL',       emoji: '✅', color: '#059669' },
+    ];
+
+    function stripPrefixes(line) {
+      return line
+        .replace(/^(SECTION\s*\d+\s*[:\.\-]+\s*)/gi, '')
+        .replace(/^[\d]+[\.:\)]\s*/g, '')
+        .replace(/^[-#]+\s*/g, '')
+        .replace(/---+/g, '')
+        .replace(/\*\*(.+?)\*\*/g, '$1')
+        .trim();
+    }
+
+    function getSectionDef(line) {
+      const stripped = stripPrefixes(line).toUpperCase();
+      if (line.length > 80) return null;
+      return sectionDefs.find(s => {
+        return stripped === s.key.toUpperCase() ||
+               stripped.startsWith(s.key.toUpperCase()) ||
+               stripped.endsWith(s.key.toUpperCase());
+      });
+    }
+
+    function mdToHtml(text) {
+      return text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>');
+    }
+
+    const lines = cleanText.split('\n');
+    let html = '';
+    let insideCard = false;
+    let currentColor = '#1E3A5F';
+
+    lines.forEach((line, idx) => {
+      const raw = line.trim();
+
+      if (!raw) {
+        if (insideCard) html += '<div style="height:4px;"></div>';
+        return;
+      }
+
+      const def = getSectionDef(raw);
+      if (def) {
+        if (insideCard) html += '</div>';
+        currentColor = def.color;
+        const headerLabel = stripPrefixes(raw);
+        console.log('Opening section card:', headerLabel);
+        html += `<div style="display:flex;align-items:center;gap:12px;background:${def.color};padding:16px 20px;margin:24px 0 0 0;border-radius:12px 12px 0 0;">
+        <span style="font-size:24px;">${def.emoji}</span>
+        <span style="color:white;font-size:16px;font-weight:800;letter-spacing:0.3px;">${headerLabel}</span>
+      </div>
+      <div style="background:white;border-radius:0 0 12px 12px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,0.08);margin-bottom:8px;">`;
+        insideCard = true;
+        return;
+      }
+
+      if (!insideCard) {
+        html += '<div style="background:white;border-radius:12px;padding:20px;box-shadow:0 4px 12px rgba(0,0,0,0.08);margin-bottom:8px;">';
+        insideCard = true;
+      }
+
+      const clean = mdToHtml(raw
+        .replace(/^#+\s*/, '')
+        .replace(/^---+\s*/, ''));
+
+      if (raw.toUpperCase().match(/^RISK LEVEL[:\s]/)) {
+        const level = raw.toUpperCase();
+        const bc = level.includes('CRITICAL') ? '#DC2626' : level.includes('HIGH') ? '#EA580C' : level.includes('LOW') ? '#16A34A' : '#D97706';
+        const label = raw.replace(/RISK LEVEL[:\s]*/i,'').trim();
+        html += `<div style="margin-bottom:12px;"><span style="background:${bc};color:white;font-size:12px;font-weight:700;padding:5px 14px;border-radius:20px;display:inline-block;">${label}</span></div>`;
+        return;
+      }
+
+      if (raw.toUpperCase().match(/^RISK SUMMARY[:\s]/)) {
+        const txt = raw.replace(/RISK SUMMARY[:\s]*/i,'').trim();
+        html += `<p style="font-style:italic;color:#64748B;font-size:14px;line-height:1.6;margin:0 0 16px 0;padding-bottom:14px;border-bottom:2px solid #F1F5F9;">${mdToHtml(txt)}</p>`;
+        return;
+      }
+
+      if (raw.match(/^(Key risks|What to do|Before you|When you are|Important:)/i)) {
+        html += `<div style="font-weight:800;color:${currentColor};font-size:12px;text-transform:uppercase;letter-spacing:1px;margin:18px 0 8px 0;padding-top:10px;border-top:1px solid #F1F5F9;">${clean}</div>`;
+        return;
+      }
+
+      if (raw.match(/^[-•·]\s+/)) {
+        const content = mdToHtml(raw.replace(/^[-•·]\s+/,''));
+        html += `<div style="display:flex;gap:12px;margin:10px 0;align-items:flex-start;">
+        <span style="color:${currentColor};font-size:18px;flex-shrink:0;line-height:1.5;">•</span>
+        <span style="font-size:14px;color:#1F2937;line-height:1.7;">${content}</span>
+      </div>`;
+        return;
+      }
+
+      const numMatch = raw.match(/^(\d+)[.)]\s+(.+)/);
+      if (numMatch) {
+        html += `<div style="display:flex;gap:12px;margin:10px 0;align-items:flex-start;">
+        <span style="background:${currentColor};color:white;border-radius:50%;min-width:24px;height:24px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;">${numMatch[1]}</span>
+        <span style="font-size:14px;color:#1F2937;line-height:1.7;">${mdToHtml(numMatch[2])}</span>
+      </div>`;
+        return;
+      }
+
+      if (raw.match(/^☐\s+/)) {
+        html += `<div style="display:flex;gap:10px;margin:8px 0;align-items:center;">
+        <input type="checkbox" style="width:18px;height:18px;accent-color:${currentColor};flex-shrink:0;cursor:pointer;">
+        <span style="font-size:14px;color:#1F2937;line-height:1.6;">${clean.replace(/^☐\s+/,'')}</span>
+      </div>`;
+        return;
+      }
+
+      if (raw.length > 5) {
+        html += `<p style="font-size:14px;color:#1F2937;line-height:1.7;margin:8px 0;">${clean}</p>`;
+      }
+    });
+
+    if (insideCard) html += '</div>';
+
+    container.innerHTML = html;
+    console.log('Done. Rendered HTML length:', html.length);
+  }
+
+  function closeModal() {
+    briefingModal.classList.remove('modal-visible');
+    briefingModal.classList.add('modal-hidden');
+    document.body.style.overflow = '';
+  }
+
+  modalCloseBtn.addEventListener('click', closeModal);
+
+  // Share button
+  modalShareBtn.addEventListener('click', () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      shareTooltip.classList.add('show');
+      setTimeout(() => shareTooltip.classList.remove('show'), 2000);
+    }).catch(() => showToast('Could not copy link'));
+  });
+
+  // ── Loading state ──────────────────────────────────────────
+  function setLoading(on) { inputEl.disabled = on; btnSend.disabled = on; }
+
+  // ── Send message ───────────────────────────────────────────
+  async function sendMessage(overrideText) {
+    const text = overrideText || inputEl.value.trim();
+    if (!text) return;
+
+    inputEl.value = '';
+    inputEl.style.height = 'auto';
+    appendMessage('user', text);
+    messages.push({ role: 'user', content: text });
+    setLoading(true);
+    showLoader();
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages }),
+      });
+      const data = await res.json();
+      removeLoader();
+      if (!res.ok) throw new Error(data.error || 'Unknown error');
+      const responseText = data.content;
+      const fullText = responseText;
+      console.log('FRONTEND RECEIVED LENGTH:', fullText.length);
+      console.log('FRONTEND PREVIEW:', fullText.substring(0, 200));
+      window.lastBriefingText = fullText;
+      console.log('API RESPONSE RECEIVED, length:', responseText.length, 'first 200 chars:', responseText.substring(0, 200));
+      messages.push({ role: 'assistant', content: responseText });
+      appendMessage('agent', responseText);
+    } catch (err) {
+      removeLoader();
+      appendMessage('agent', `Sorry, something went wrong: ${err.message}. Please try again.`);
+    } finally {
+      setLoading(false);
+      inputEl.focus();
+    }
+  }
+
+  // ── PDF upload ─────────────────────────────────────────────
+  async function handlePdfUpload(file) {
+    if (!file) return;
+    if (file.type !== 'application/pdf') { showToast('Please select a PDF file'); return; }
+
+    appendMessage('user', `📎 Uploaded: ${file.name}`);
+    setLoading(true);
+    showLoader();
+
+    const form = new FormData();
+    form.append('pdf', file);
+
+    try {
+      const res = await fetch('/api/upload-itinerary', { method: 'POST', body: form });
+      const data = await res.json();
+      removeLoader();
+      if (!res.ok) throw new Error(data.error || 'Upload failed');
+      showToast('✅ Itinerary uploaded successfully');
+      const autoMsg = `I have uploaded my itinerary. Here are the details:\n\n${data.text}\n\nPlease analyse this and ask me any additional questions you need to build my risk briefing.`;
+      messages.push({ role: 'user', content: autoMsg });
+      showLoader();
+      const chatRes = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages }),
+      });
+      const chatData = await chatRes.json();
+      removeLoader();
+      if (!chatRes.ok) throw new Error(chatData.error);
+      const pdfBriefingText = chatData.content;
+      window.lastBriefingText = pdfBriefingText;
+      renderBriefingIntoModal(window.lastBriefingText);
+      messages.push({ role: 'assistant', content: pdfBriefingText });
+      appendMessage('agent', pdfBriefingText);
+    } catch (err) {
+      removeLoader();
+      appendMessage('agent', `Sorry, could not process the PDF: ${err.message}`);
+    } finally {
+      setLoading(false);
+      inputEl.focus();
+      pdfInput.value = '';
+    }
+  }
+
+  btnUploadHeader.addEventListener('click', () => pdfInput.click());
+  btnUploadClip.addEventListener('click', () => pdfInput.click());
+  pdfInput.addEventListener('change', () => handlePdfUpload(pdfInput.files[0]));
+
+  // ── Sidebar Start Briefing ─────────────────────────────────
+  btnStartBriefing.addEventListener('click', () => {
+    const dest = document.getElementById('sb-destination').value.trim();
+    const dates = extractDates();
+    const concerns = [...document.querySelectorAll('.concern-item input:checked')].map(c => c.value);
+    if (!dest) { document.getElementById('sb-destination').focus(); return; }
+    window.currentDestination = dest;
+    window.currentTravelDates = (document.getElementById('dateFrom').value || '') + ' to ' + (document.getElementById('dateTo').value || '');
+    console.log('Stored destination:', window.currentDestination, 'dates:', window.currentTravelDates);
+    let msg = `I am planning a trip to ${dest}`;
+    if (dates) msg += ` (${dates})`;
+    if (selectedParty) msg += `. I am travelling ${selectedParty.toLowerCase()}`;
+    if (concerns.length) msg += `. My main concerns are: ${concerns.join(', ')}`;
+    msg += `. Please start my TripSafe risk briefing.`;
+    if (window.innerWidth <= 768) toggleSidebar();
+    sendMessage(msg);
+  });
+
+  // ── Auto-grow textarea ─────────────────────────────────────
+  inputEl.addEventListener('input', () => {
+    inputEl.style.height = 'auto';
+    inputEl.style.height = Math.min(inputEl.scrollHeight, 100) + 'px';
+  });
+  inputEl.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
+  btnSend.addEventListener('click', () => sendMessage());
+
+  // ── New trip ───────────────────────────────────────────────
+  btnNew.addEventListener('click', () => {
+    messages = []; selectedParty = '';
+    document.querySelectorAll('.pill[data-party]').forEach(p => p.classList.remove('active'));
+    document.getElementById('sb-destination').value = '';
+    const dfEl = document.getElementById('dateFrom'); if (dfEl) dfEl.value = '';
+    const dtEl = document.getElementById('dateTo'); if (dtEl) dtEl.value = '';
+    document.querySelectorAll('.concern-item input').forEach(c => c.checked = false);
+    closeModal();
+    showWelcome();
+    inputEl.focus();
+  });
+
+  // ── Init ───────────────────────────────────────────────────
+  showWelcome();
+  inputEl.focus();
+</script>
+</body>
+</html>

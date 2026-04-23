@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm start *)",
+      "Bash(netstat -ano)",
+      "Bash(awk '{print $5}')",
+      "Bash(xargs -r taskkill //F //PID)",
+      "Bash(pkill -f \"node server.js\")",
+      "Bash(node server.js)",
+      "Bash(npx kill-port *)",
+      "Bash(xargs -I{} taskkill /PID {} /F)",
+      "PowerShell(Get-NetTCPConnection *)",
+      "Bash(node -e ' *)",
+      "Bash(node *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git config *)",
+      "Bash(git push *)"
+    ]
+  }
+}
